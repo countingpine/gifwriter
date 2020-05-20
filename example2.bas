@@ -1,5 +1,5 @@
-#include "gifwriter.bi"
 '' compile with fbc example2.bas gifwriter.bas
+#include once "gifwriter.bi"
 
 screen 13
 
@@ -30,5 +30,5 @@ for i as integer = 1 to 100
 	sleep 10
 next i
 
-bsave "test-img.bmp", img
+bsave "lines-final.bmp", img
 imagedestroy img

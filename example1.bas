@@ -1,5 +1,5 @@
-#include "gifwriter.bi"
 '' compile with fbc example1.bas gifwriter.bas
+#include once "gifwriter.bi"
 
 screen 13
 
