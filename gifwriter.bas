@@ -23,6 +23,7 @@ function GifWriter.close() as long
 		deallocate(prevframe)
 		prevframe = NULL
 	end if
+
 	return errorCode
 end function
 
@@ -51,7 +52,8 @@ function GifWriter.saveScreen() as long
 	end if
 	screenunlock
 
-	return (errorCode = E_GIF_SUCCEEDED)
+	errorCode = E_GIF_SUCCEEDED
+	return errorCode
 end function
 
 function GifWriter.saveFrame( _
