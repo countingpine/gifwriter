@@ -199,6 +199,21 @@ function GifWriter.saveFrame( _
 	end if
 
 	return errorCode
+end function
 
+function GifWriter.addDelay(byval centiseconds as ushort) as long
+	dim as GraphicsControlBlock gcb
+	dim as GifByteType gifextension(0 to 3)
+
+	with gcb
+		.DisposalMode = DISPOSAL_UNSPECIFIED
+		.UserInputFlag = false
+		.DelayTime = centiseconds
+		.TransparentColor = NO_TRANSPARENT_COLOR
+	end with
+	EGifGCBToExtension(@gcb, @gifextension(0))
+
+	errorCode = EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, 4, @gifextension(0))
+	return errorCode
 end function
 

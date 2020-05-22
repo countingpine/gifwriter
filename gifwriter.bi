@@ -8,6 +8,7 @@ type GifWriter
 		byval p as const ubyte ptr, _
 		byval wid as long, byval hei as long, byval pitch as long, _
 		byval pal as const ulong const ptr) as long
+	declare function addDelay(byval centiseconds as ushort) as long
 	declare function close() as long
 	declare destructor()
 
