@@ -167,11 +167,11 @@ function GifWriter.saveFrame( _
 				c1 = src[y * pitch + x]
 				c2 = prevframe[y * wid + x]
 				if c1 > lastindex then lastindex = c1
-				if not (c1 = c2 andalso pal[c1] = gpal(c2)) then use_gpal = false
+				if pal[c1] = gpal(c1) then use_gpal = false
 			next x
 			if lastindex = 255 and (use_gpal = 0) then exit for
 		next y
-
+#if 0
 		if use_gpal = 0 then
 			'' Need to assign a local palette.
 			'' We'll use the full 256-colour palette, but we could
@@ -186,6 +186,7 @@ function GifWriter.saveFrame( _
 				cmap->Colors[i].Blue  = pal[i]        and 255
 			next i
 		end if
+#endif
 		memcpy(@prevpal(0), pal, sizeof(long) * (lastindex+1))
 
 		EGifPutImageDesc(gif, x1, y1, x2-x1+1, y2-y1+1, 0, cmap)
