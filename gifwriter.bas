@@ -4,6 +4,7 @@
 
 constructor GifWriter(byref filename as const string, byval TestExistence as boolean)
 	gif = EGifOpenFileName(filename, TestExistence, @errorCode)
+	EGifSetGifVersion(gif, 1) '' GIF89A
 end constructor
 
 destructor GifWriter()
