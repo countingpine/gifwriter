@@ -226,6 +226,14 @@ function GifWriter.putDelay() as long
 	EGifGCBToExtension(@gcb, @gifextension(0))
 
 	errorcode = EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, 4, @gifextension(0))
+
+	if errorcode = GIF_OK then
+		errorcode = E_GIF_SUCCEEDED
+		delay = 0
+	else
+		errorcode = E_GIF_ERR_WRITE_FAILED
+	end if
+
 	return errorcode
 end function
 
