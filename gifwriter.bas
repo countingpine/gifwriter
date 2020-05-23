@@ -87,6 +87,8 @@ function GifWriter.saveFrame( _
 		EGifPutScreenDesc(gif, wid, hei, 256, 0, cmap)
 		GifFreeMapObject(cmap)
 
+		PutDelay()
+
 		EGifPutImageDesc(gif, 0, 0, wid, hei, 0, NULL)
 		for y as integer = 0 to hei-1
 			'' Because EGifPutLine reserves the right to modify the line!
@@ -100,6 +102,8 @@ function GifWriter.saveFrame( _
 	else
 		if wid > gifwid then wid = gifwid
 		if hei > gifhei then hei = gifhei
+
+		PutDelay()
 
 		'' Can we output a smaller, changed region?
 		'' Trim off unchanged rows/columns from top/bottom/left/right.
@@ -201,14 +205,22 @@ function GifWriter.saveFrame( _
 	return errorcode
 end function
 
-function GifWriter.addDelay(byval centiseconds as ushort) as long
+sub GifWriter.addDelay(centiseconds as ushort)
+	if delay + centiseconds > 65535 then
+		delay = 65535
+	else
+		delay += centiseconds
+	end if
+end sub
+
+function GifWriter.putDelay() as long
 	dim as GraphicsControlBlock gcb
 	dim as GifByteType gifextension(0 to 3)
 
 	with gcb
 		.DisposalMode = DISPOSAL_UNSPECIFIED
 		.UserInputFlag = false
-		.DelayTime = centiseconds
+		.DelayTime = delay
 		.TransparentColor = NO_TRANSPARENT_COLOR
 	end with
 	EGifGCBToExtension(@gcb, @gifextension(0))

@@ -8,7 +8,7 @@ type GifWriter
 		byval p as const ubyte ptr, _
 		byval wid as long, byval hei as long, byval pitch as long, _
 		byval pal as const ulong const ptr) as long
-	declare function addDelay(byval centiseconds as ushort) as long
+	declare sub addDelay(byval centiseconds as ushort)
 	declare function close() as long
 	declare function errorString() as string
 	declare destructor()
@@ -16,10 +16,16 @@ type GifWriter
 	as long errorcode = E_GIF_SUCCEEDED
 
 	private:
+	'' disable copying
 	declare constructor(byref as const GifWriter)
 	declare operator let(byref as const GifWriter)
+
+	declare function putDelay() as long
+
 	as GifFileType ptr gif
+
 	as boolean writtenfirstframe = false
+	as ushort delay = 0
 
 	as GifPixelType ptr prevframe
 	as GifPixelType ptr gifline
