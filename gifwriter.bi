@@ -10,9 +10,10 @@ type GifWriter
 		byval pal as const ulong const ptr) as long
 	declare function addDelay(byval centiseconds as ushort) as long
 	declare function close() as long
+	declare function errorString() as string
 	declare destructor()
 
-	as long errorCode
+	as long errorcode = E_GIF_SUCCEEDED
 
 	private:
 	declare constructor(byref as const GifWriter)

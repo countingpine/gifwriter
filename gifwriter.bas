@@ -3,7 +3,7 @@
 #include "crt.bi"
 
 constructor GifWriter(byref filename as const string, byval TestExistence as boolean)
-	gif = EGifOpenFileName(filename, TestExistence, @errorCode)
+	gif = EGifOpenFileName(filename, TestExistence, @errorcode)
 	EGifSetGifVersion(gif, 1) '' GIF89A
 end constructor
 
@@ -13,7 +13,7 @@ end destructor
 
 function GifWriter.close() as long
 	if gif then
-		EGifCloseFile(gif, @errorCode)
+		EGifCloseFile(gif, @errorcode)
 		gif = NULL
 	end if
 	if gifline then
@@ -25,7 +25,7 @@ function GifWriter.close() as long
 		prevframe = NULL
 	end if
 
-	return errorCode
+	return errorcode
 end function
 
 function GifWriter.saveScreen() as long
@@ -46,15 +46,15 @@ function GifWriter.saveScreen() as long
 			next i
 			saveFrame(src, wid, hei, pitch, @pal(0))
 		else
-			errorCode = E_GIF_ERR_NO_COLOR_MAP
+			errorcode = E_GIF_ERR_NO_COLOR_MAP
 		end if
 	else
-		errorCode = E_GIF_ERR_WRITE_FAILED '' there's no generic error code
+		errorcode = E_GIF_ERR_WRITE_FAILED '' there's no generic error code
 	end if
 	screenunlock
 
-	errorCode = E_GIF_SUCCEEDED
-	return errorCode
+	errorcode = E_GIF_SUCCEEDED
+	return errorcode
 end function
 
 function GifWriter.saveFrame( _
@@ -70,7 +70,7 @@ function GifWriter.saveFrame( _
 		gifline = allocate(wid)
 		prevframe = allocate(wid * hei)
 		if gifline = NULL or prevframe = NULL then
-			errorCode = E_GIF_ERR_NOT_ENOUGH_MEM
+			errorcode = E_GIF_ERR_NOT_ENOUGH_MEM
 		end if
 
 		memcpy(@gpal(0),    pal, sizeof(long)*256)
@@ -198,7 +198,7 @@ function GifWriter.saveFrame( _
 
 	end if
 
-	return errorCode
+	return errorcode
 end function
 
 function GifWriter.addDelay(byval centiseconds as ushort) as long
@@ -213,7 +213,24 @@ function GifWriter.addDelay(byval centiseconds as ushort) as long
 	end with
 	EGifGCBToExtension(@gcb, @gifextension(0))
 
-	errorCode = EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, 4, @gifextension(0))
-	return errorCode
+	errorcode = EGifPutExtension(gif, GRAPHICS_EXT_FUNC_CODE, 4, @gifextension(0))
+	return errorcode
 end function
 
+function GifWriter.errorString() as string
+	#define case_(e) case e: return #e
+	select case errorcode
+	case_(E_GIF_SUCCEEDED)
+	case_(E_GIF_ERR_OPEN_FAILED)
+	case_(E_GIF_ERR_WRITE_FAILED)
+	case_(E_GIF_ERR_HAS_SCRN_DSCR)
+	case_(E_GIF_ERR_HAS_IMAG_DSCR)
+	case_(E_GIF_ERR_NO_COLOR_MAP)
+	case_(E_GIF_ERR_DATA_TOO_BIG)
+	case_(E_GIF_ERR_NOT_ENOUGH_MEM)
+	case_(E_GIF_ERR_DISK_IS_FULL)
+	case_(E_GIF_ERR_CLOSE_FAILED)
+	case_(E_GIF_ERR_NOT_WRITEABLE)
+	case else: return str(errorcode)
+	end select
+end function
