@@ -231,7 +231,7 @@ function GifWriter.putDelay() as long
 	if errorcode = GIF_OK then
 		errorcode = E_GIF_SUCCEEDED
 		delay = 0
-	else
+	else '' GIF_ERROR
 		errorcode = E_GIF_ERR_WRITE_FAILED
 	end if
 
