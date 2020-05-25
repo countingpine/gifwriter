@@ -13,6 +13,8 @@ end destructor
 
 function GifWriter.close() as long
 	if gif then
+		if loopcount <> PLAY_ONCE then putLoop()
+
 		EGifCloseFile(gif, @errorcode)
 		gif = NULL
 	end if
@@ -238,7 +240,7 @@ function GifWriter.putDelay() as long
 	return errorcode
 end function
 
-function GifWriter.setLoop(byval loopcount as ushort) as long
+function GifWriter.putLoop() as long
 	dim as GifByteType gifextension(0 to 2)
 
 	gifextension(0) = 1

@@ -14,12 +14,16 @@ type GifWriter
 		byval wid as long, byval hei as long, byval pitch as long, _
 		byval pal as const ulong const ptr) as long
 	declare sub addDelay(byval centiseconds as ushort)
-	declare function setLoop(byval loopcount as ushort = 0) as long
 	declare function close() as long
 	declare function errorString() as string
 	declare destructor()
 
 	as long errorcode = E_GIF_SUCCEEDED
+	enum
+		LOOP_FOREVER = 0
+		PLAY_ONCE = 1
+	end enum
+	as ushort loopcount = PLAY_ONCE
 
 	private:
 	'' disable copying
@@ -27,6 +31,7 @@ type GifWriter
 	declare operator let(byref as const GifWriter)
 
 	declare function putDelay() as long
+	declare function putLoop() as long
 
 	as GifFileType ptr gif
 
