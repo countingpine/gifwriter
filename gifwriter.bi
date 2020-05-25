@@ -1,3 +1,8 @@
+#pragma once
+
+#ifndef __GIF_WRITER_BI__
+#define __GIF_WRITER_BI__
+
 #include "gif_lib.bi"
 
 type GifWriter
@@ -9,6 +14,7 @@ type GifWriter
 		byval wid as long, byval hei as long, byval pitch as long, _
 		byval pal as const ulong const ptr) as long
 	declare sub addDelay(byval centiseconds as ushort)
+	declare function setLoop(byval loopcount as ushort = 0) as long
 	declare function close() as long
 	declare function errorString() as string
 	declare destructor()
@@ -33,3 +39,4 @@ type GifWriter
 	as ulong prevpal(0 to 255), gpal(0 to 255)
 end type
 
+#endif
