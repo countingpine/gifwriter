@@ -238,6 +238,38 @@ function GifWriter.putDelay() as long
 	return errorcode
 end function
 
+function GifWriter.setLoop(byval loopcount as ushort) as long
+	dim as GifByteType gifextension(0 to 2)
+
+	gifextension(0) = 1
+	gifextension(1) = loopcount and 255
+	gifextension(2) = (loopcount shr 8) and 255
+
+	if EGifPutExtensionLeader(gif, APPLICATION_EXT_FUNC_CODE) <> GIF_OK then
+		errorcode = E_GIF_ERR_WRITE_FAILED
+		return errorcode
+	end if
+
+	if EGifPutExtensionBlock(gif, 11, @"NETSCAPE2.0") <> GIF_OK then
+		errorcode = E_GIF_ERR_WRITE_FAILED
+		return errorcode
+	end if
+
+	if EGifPutExtensionBlock(gif, 3, @gifextension(0)) <> GIF_OK then
+		errorcode = E_GIF_ERR_WRITE_FAILED
+		return errorcode
+	end if
+
+	if EGifPutExtensionTrailer(gif) <> GIF_OK then
+		errorcode = E_GIF_ERR_WRITE_FAILED
+		return errorcode
+	end if
+
+	delay = 0
+
+	return E_GIF_SUCCEEDED
+end function
+
 function GifWriter.errorString() as string
 	#define case_(e) case e: return #e
 	select case errorcode
