@@ -24,6 +24,8 @@ for i as integer = 1 to 100
 	dim as ubyte c = 1 + r(255)
 	pal(c) = r(16777216)
 	palette c, pal(c) shr 16 and 255, pal(c) shr 8 and 255, pal(c) and 255
+
+	g.addDelay(10)
 	g.saveframe(p, W, H, pitch, @pal(0))
 
 	put (10, 10), img, pset
