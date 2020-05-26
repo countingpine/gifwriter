@@ -8,12 +8,13 @@
 type GifWriter
 	public:
 	declare constructor(byref filename as const string, byval TestExistence as boolean = false)
+	declare sub setDefaultFrameDuration(byval centiseconds as ushort)
+	declare sub setNextFrameDuration(byval centiseconds as ushort)
 	declare function saveScreen() as long
 	declare function saveFrame( _
 		byval p as const ubyte ptr, _
 		byval wid as long, byval hei as long, byval pitch as long, _
 		byval pal as const ulong const ptr) as long
-	declare sub addDelay(byval centiseconds as ushort)
 	declare function close() as long
 	declare function errorString() as string
 	declare destructor()
@@ -30,18 +31,20 @@ type GifWriter
 	declare constructor(byref as const GifWriter)
 	declare operator let(byref as const GifWriter)
 
-	declare function putDelay() as long
+	declare function putDuration() as long
 	declare function putLoop() as long
 
 	as GifFileType ptr gif
 
 	as boolean writtenfirstframe = false
-	as ushort delay = 0
 
 	as GifPixelType ptr prevframe
 	as GifPixelType ptr gifline
 	as long gifwid, gifhei
 	as ulong prevpal(0 to 255), gpal(0 to 255)
+
+	as ushort defaultduration = 0
+	as integer nextduration = -1
 end type
 
 #endif

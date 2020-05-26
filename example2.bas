@@ -12,6 +12,8 @@ imageinfo img, ,,, pitch, p
 
 dim as GifWriter g = GifWriter("lines.gif")
 
+g.setDefaultFrameDuration(5)
+
 dim as long pal(0 to 255)
 for c as integer = 1 to 255
 	pal(c) = r(16777216)
@@ -25,7 +27,6 @@ for i as integer = 1 to 100
 	pal(c) = r(16777216)
 	palette c, pal(c) shr 16 and 255, pal(c) shr 8 and 255, pal(c) and 255
 
-	g.addDelay(10)
 	g.saveframe(p, W, H, pitch, @pal(0))
 
 	put (10, 10), img, pset

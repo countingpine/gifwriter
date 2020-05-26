@@ -89,7 +89,7 @@ function GifWriter.saveFrame( _
 		EGifPutScreenDesc(gif, wid, hei, 256, 0, cmap)
 		GifFreeMapObject(cmap)
 
-		PutDelay()
+		PutDuration()
 
 		EGifPutImageDesc(gif, 0, 0, wid, hei, 0, NULL)
 		for y as integer = 0 to hei-1
@@ -105,7 +105,7 @@ function GifWriter.saveFrame( _
 		if wid > gifwid then wid = gifwid
 		if hei > gifhei then hei = gifhei
 
-		PutDelay()
+		PutDuration()
 
 		'' Can we output a smaller, changed region?
 		'' Trim off unchanged rows/columns from top/bottom/left/right.
@@ -208,22 +208,24 @@ function GifWriter.saveFrame( _
 	return errorcode
 end function
 
-sub GifWriter.addDelay(centiseconds as ushort)
-	if delay + centiseconds > 65535 then
-		delay = 65535
-	else
-		delay += centiseconds
-	end if
+sub GifWriter.setNextFrameDuration(byval centiseconds as ushort)
+	nextduration = centiseconds
 end sub
 
-function GifWriter.putDelay() as long
+sub GifWriter.setDefaultFrameDuration(byval centiseconds as ushort)
+	defaultduration = centiseconds
+end sub
+
+function GifWriter.putDuration() as long
 	dim as GraphicsControlBlock gcb
 	dim as GifByteType gifextension(0 to 3)
+
+	dim as ushort centiseconds = iif(nextduration >= 0, nextduration, defaultduration)
 
 	with gcb
 		.DisposalMode = DISPOSAL_UNSPECIFIED
 		.UserInputFlag = false
-		.DelayTime = delay
+		.DelayTime = centiseconds
 		.TransparentColor = NO_TRANSPARENT_COLOR
 	end with
 	EGifGCBToExtension(@gcb, @gifextension(0))
@@ -232,10 +234,11 @@ function GifWriter.putDelay() as long
 
 	if errorcode = GIF_OK then
 		errorcode = E_GIF_SUCCEEDED
-		delay = 0
 	else '' GIF_ERROR
 		errorcode = E_GIF_ERR_WRITE_FAILED
 	end if
+
+	nextduration = -1
 
 	return errorcode
 end function
@@ -266,8 +269,6 @@ function GifWriter.putLoop() as long
 		errorcode = E_GIF_ERR_WRITE_FAILED
 		return errorcode
 	end if
-
-	delay = 0
 
 	return E_GIF_SUCCEEDED
 end function
